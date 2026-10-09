@@ -1,0 +1,22 @@
+﻿services:
+  minio:
+    image: dappros/minio@sha256:624bad2fe79a8613aa3c5c9b765ebcab365080b8445cf1b05c357cc7753725f0
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - migration-net
+    mem_limit: 1g
+    cpus: 1.0
+
+volumes:
+  minio-data:
+
+networks:
+  migration-net:
+    external: true
