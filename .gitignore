@@ -1,0 +1,18 @@
+@'
+# Environment secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+'@ | Set-Content -Encoding utf8 .gitignore
