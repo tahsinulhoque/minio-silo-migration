@@ -1,0 +1,1 @@
+Hello from MinIO migration test - DEV-917
