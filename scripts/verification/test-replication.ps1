@@ -1,58 +1,54 @@
-```powershell
+
 $ErrorActionPreference = "Stop"
 
 $ComposeFile = "compose.minio.yaml"
-$Bucket = "replication-smoke"
-$Object = "replication-test.txt"
-$ContainerFile = "/tmp/replication-test.txt"
+$SourceAlias = "local"
+$TargetAlias = "silo"
+$Bucket = "silo-replication-smoke"
+$Object = "silo-test.txt"
+$ContainerFile = "/tmp/silo-test.txt"
 $LocalFile = Join-Path $env:TEMP $Object
 
-Write-Host "`n=== DEV-919 Replication Smoke Test ===" -ForegroundColor Cyan
+Write-Host "`n=== DEV-919: MinIO to Silo Test ===" -ForegroundColor Cyan
 
-# Step 1: Create test file on Windows
-$content = "DEV-919 automatic replication test"
+# 1. Create test file on Windows
+$content = "DEV-919 MinIO-to-Silo test $(Get-Date -Format o)"
 [System.IO.File]::WriteAllText($LocalFile, $content)
 
-Write-Host "[1/5] Test file created."
-
-# Step 2: Copy file into the MinIO container
-docker cp $LocalFile minio-silo-migration-minio-1:$ContainerFile
+# 2. Copy file into source container
+docker cp $LocalFile "minio-silo-migration-minio-1:$ContainerFile"
 if ($LASTEXITCODE -ne 0) {
-    throw "Failed to copy test file into the MinIO container."
+    throw "FAIL: Could not copy test file into source container."
 }
 
-Write-Host "[2/5] Test file copied into source container."
-
-# Step 3: Upload to source bucket
+# 3. Upload to MinIO source bucket
 docker compose -f $ComposeFile exec -T minio mc cp `
-    $ContainerFile "local/$Bucket/$Object"
+    $ContainerFile "$SourceAlias/$Bucket/$Object"
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Source upload failed."
+    throw "FAIL: Source upload failed."
 }
 
-Write-Host "[3/5] Source upload command succeeded."
-
-# Step 4: Verify source object
+# 4. Verify source object
 docker compose -f $ComposeFile exec -T minio mc stat `
-    "local/$Bucket/$Object"
+    "$SourceAlias/$Bucket/$Object"
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Source object verification failed."
+    throw "FAIL: Source object could not be verified."
 }
 
-Write-Host "[4/5] Source object verified."
+Write-Host "`nSource upload verified. Waiting 10 seconds for replication..." -ForegroundColor Yellow
+Start-Sleep -Seconds 10
 
-# Step 5: Check target replication
-Start-Sleep -Seconds 5
-
+# 5. Verify target object in Silo
 docker compose -f $ComposeFile exec -T minio mc stat `
-    "target/$Bucket/$Object"
+    "$TargetAlias/$Bucket/$Object"
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "`nPASS: Target object exists. Check checksum before final acceptance." -ForegroundColor Green
+    Write-Host "`nTARGET OBJECT FOUND: replication may be working." -ForegroundColor Green
+    Write-Host "Compare source and target checksums before declaring PASS."
 }
 else {
-    Write-Host "`nNOT VERIFIED: Target object is missing or unavailable. Replication needs troubleshooting." -ForegroundColor Yellow
+    Write-Host "`nNOT VERIFIED: object did not appear in Silo." -ForegroundColor Yellow
+    Write-Host "Check replication status and server compatibility."
 }
-```
