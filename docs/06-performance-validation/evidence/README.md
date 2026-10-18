@@ -2,71 +2,66 @@
 
 ## 1. Objective
 
-Evaluate MinIO performance using local storage and compare it with NFS-backed storage under equivalent test conditions.
-
-The benchmark will measure throughput, operation latency, and data integrity using controlled test objects.
+Measure MinIO upload/download performance using the current local Docker storage setup and compare it with NFS-backed storage when an NFS environment becomes available.
 
 ## 2. Environment
 
 - Host OS: Windows with Docker Desktop
-- Container runtime: Docker Engine
 - Orchestration: Docker Compose
-- MinIO image: `dappros/minio` (pinned digest)
-- Available Docker resources: 8 CPUs and approximately 3.68 GiB RAM
+- MinIO image: pinned `dappros/minio` image
+- MinIO version: `RELEASE.2025-09-07T16-13-09Z`
+- Docker resources: 8 CPUs and approximately 3.68 GiB RAM
 - MinIO container memory limit: 1 GiB
-- Local storage: Docker named volume
-- NFS storage: Pending environment verification
+- Storage: Docker-backed local volume
+- MinIO topology: single node, single drive
 
-## 3. Benchmark Plan
+## 3. Local Benchmark Results
 
-### Test A — Local Storage Baseline
+Test object size: 10 MiB (10,485,760 bytes)
 
-1. Verify MinIO health and storage configuration.
-2. Use a dedicated benchmark bucket and synthetic test objects.
-3. Record object sizes, upload/download duration, throughput, and checksums.
-4. Repeat tests under the same conditions.
-5. Save raw results and environment details in `evidence/`.
+| Operation | Duration | Throughput | Notes |
+|---|---:|---:|---|
+| Upload run 1 | 4.624 s | 2.16 MiB/s | End-to-end, includes Docker copy |
+| Download run 1 | 4.217 s | 2.37 MiB/s | End-to-end, includes Docker copy |
+| Upload run 2 | 3.984 s | 2.51 MiB/s | Stopwatch includes Docker Compose command overhead |
+| Upload run 2 | Not independently timed | 49.87 MiB/s | Speed reported by `mc` |
 
-### Test B — NFS Storage
+These measurements use different timing methods and must not be treated as directly comparable. They are preliminary observations, not a definitive storage performance benchmark.
 
-1. Verify that an accessible NFS server and export are available.
-2. Document the NFS protocol, mount configuration, and network conditions.
-3. Use an isolated test deployment and dedicated storage.
-4. Repeat the same workload used for the local baseline.
-5. Record results and compare them with the local baseline.
+## 4. Data Integrity
 
-**Status:** Pending NFS environment verification.
+- Original and downloaded test file SHA-256 matched.
+- The second uploaded object was downloaded to Windows and its SHA-256 matched the original file.
+- Integrity result: PASS for the verified objects.
 
-## 4. Metrics
+## 5. NFS Comparison Status
 
-- Upload throughput (MiB/s)
-- Download throughput (MiB/s)
-- Operation duration
-- Data integrity (SHA-256 where applicable)
-- MinIO health and error logs
+**Status: BLOCKED / PENDING**
 
-## 5. Test Controls
+The NFS comparison could not be executed because an accessible NFS server/export has not been identified.
 
-- Use synthetic, non-sensitive test data.
-- Keep object sizes, test counts, and workload consistent.
-- Record the Docker resource limits and storage configuration.
-- Avoid running multiple heavy benchmarks concurrently.
-- Do not treat a single run as a conclusive performance result.
+Environment checks:
+- Windows `ClientForNFS-Infrastructure`: Disabled
+- No NFS-related Windows services were returned by `Get-Service *NFS*`
+- Docker reports only the `local` volume plugin
+- NFS mount utilities were not found in the MinIO container
 
-## 6. Current Limitations
+These checks do not prove that NFS is impossible; they show that the required NFS test environment is not currently available or verified.
 
-- Docker currently reports only the `local` volume plugin.
-- A Windows drive being available does not establish that NFS is configured.
-- NFS availability and mount compatibility remain unverified.
-- No comparative performance results have been collected yet.
-- Results from a Docker named volume must not be described as native disk performance without further verification.
+## 6. Limitations
+
+- Only a small 10 MiB test object was used.
+- The number of benchmark runs is limited.
+- Measurements include client and container overhead.
+- The test does not isolate physical disk performance.
+- NFS results are unavailable, so no local-versus-NFS performance conclusion can be made.
+- A repeatable benchmark with larger objects and multiple runs is still recommended.
 
 ## 7. Evidence
 
-Store benchmark scripts, raw measurements, configuration details, and verification results in:
-
-`docs/06-performance-validation/evidence/`
+- `evidence/benchmark-results.txt` — recorded preliminary results and checksum verification
+- Local `.bin` files — retained locally and excluded from Git tracking
 
 ## 8. Conclusion
 
-DEV-922 is in progress. The local-storage baseline and NFS comparison must be measured before drawing conclusions about performance differences.
+The initial local-storage test and data-integrity checks succeeded. DEV-922 remains in progress until a suitable NFS server/export is available and the same workload can be run against NFS-backed storage.
