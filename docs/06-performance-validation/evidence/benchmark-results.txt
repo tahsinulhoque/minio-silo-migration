@@ -1,0 +1,30 @@
+DEV-922: Local Storage Benchmark
+Date: 2026-10-18
+Environment: Windows Docker Desktop, Docker Compose, MinIO single node/single drive
+Test object: 10 MiB (10,485,760 bytes)
+
+Run 1 - End-to-end upload:
+Duration: 4.624 seconds
+Throughput: 2.16 MiB/s
+Includes Windows-to-container copy and MinIO upload.
+
+Download - End-to-end:
+Duration: 4.217 seconds
+Throughput: 2.37 MiB/s
+
+Run 2 - MinIO client upload:
+mc-reported speed: 49.87 MiB/s
+PowerShell stopwatch: 3.984 seconds
+Stopwatch includes Docker Compose command startup overhead.
+Do not treat these measurements as directly comparable.
+
+Run 2 - Data integrity:
+Original SHA-256: 045E89CDF2FF4DED4E9AE32CAD1B564B1F82F087F406DFB0AD8426B22F7AA54B
+Downloaded SHA-256: 045E89CDF2FF4DED4E9AE32CAD1B564B1F82F087F406DFB0AD8426B22F7AA54B
+Checksum match: True
+
+Limitations:
+- Small test object and limited number of runs.
+- Results include client/container overhead; they are not isolated disk performance.
+- NFS environment and comparative benchmark remain pending.
+- No final performance conclusion can be made from these results alone.
