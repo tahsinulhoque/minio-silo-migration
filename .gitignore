@@ -16,3 +16,5 @@ secrets/
 Thumbs.db
 .vscode/
 '@ | Set-Content -Encoding utf8 .gitignore
+# DEV-922 local benchmark binary artifacts
+docs/06-performance-validation/evidence/*.bin
