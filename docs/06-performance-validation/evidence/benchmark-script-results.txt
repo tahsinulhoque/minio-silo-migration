@@ -1,0 +1,18 @@
+DEV-922 Local Benchmark
+Date: 2026-10-18T20:51:10.1571666+06:00
+File size: 10485760 bytes (10 MiB)
+
+Upload duration: 3.72 seconds
+Upload end-to-end throughput: 2.69 MiB/s
+
+Download duration: 3.849 seconds
+Download end-to-end throughput: 2.6 MiB/s
+
+Original SHA-256: 045E89CDF2FF4DED4E9AE32CAD1B564B1F82F087F406DFB0AD8426B22F7AA54B
+Downloaded SHA-256: 045E89CDF2FF4DED4E9AE32CAD1B564B1F82F087F406DFB0AD8426B22F7AA54B
+Checksum match: True
+
+Notes:
+- Timings include Docker Compose command and Docker copy overhead.
+- This is a local Docker-backed storage test, not an isolated disk benchmark.
+- NFS comparison remains pending.
