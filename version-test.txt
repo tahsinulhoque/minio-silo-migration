@@ -1,0 +1,5 @@
+Product=DevMart
+Task=DEV-920
+TestData=VersioningValidation
+Version=2
+Description=Updated test object
