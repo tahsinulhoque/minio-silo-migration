@@ -172,3 +172,16 @@ cutover have not been performed.
 
 Compare source and target bucket settings, versioning, replication
 status, object counts and checksums before proposing any cutover.
+
+### Configuration Gap Findings
+
+| Check | Source MinIO | Silo Target | Status |
+|---|---|---|---|
+| `migration-test` bucket | Exists | Exists | Versioning mismatch |
+| `replication-smoke` bucket | Exists | Exists | Versioning check pending |
+| `silo-replication-smoke` bucket | Exists | Exists | Versioning enabled on Silo |
+| `feature-validation` bucket | Exists | Missing | Target preparation required |
+| `performance-benchmark` bucket | Exists | Missing | Target preparation required |
+
+Do not proceed to cutover until bucket configuration, object
+inventory, version history, and checksums have been validated.
