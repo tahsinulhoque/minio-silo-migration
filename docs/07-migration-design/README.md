@@ -143,3 +143,32 @@ Store supporting diagrams, test records, and approved lab evidence under:
 ## 10. Status
 
 DEV-923 is in progress. This document defines the proposed migration workflow and validation requirements. Implementation and acceptance depend on completing the relevant follow-on tests.
+
+
+## Migration Readiness Checklist
+
+- [x] Source MinIO container running
+- [x] Silo target container running
+- [x] MinIO target container running
+- [x] Source MinIO reachable over Docker network by container IP
+- [ ] Source and target bucket configuration compared
+- [ ] Versioning and replication settings verified
+- [ ] Existing objects and versions inventoried
+- [ ] Object counts and SHA-256 checksums validated
+- [ ] Cutover and rollback procedure reviewed
+- [ ] Production-specific security, access and capacity checks completed
+
+## Current Lab Findings
+
+The source MinIO, Silo and MinIO target containers are running.
+The source MinIO health endpoint responds when accessed by its
+Docker network IP. Host port publishing and service-name resolution
+require separate verification.
+
+This is a local proof-of-concept only. Production migration and
+cutover have not been performed.
+
+## Next Validation
+
+Compare source and target bucket settings, versioning, replication
+status, object counts and checksums before proposing any cutover.
