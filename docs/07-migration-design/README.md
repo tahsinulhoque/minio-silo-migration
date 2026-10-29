@@ -185,3 +185,32 @@ status, object counts and checksums before proposing any cutover.
 
 Do not proceed to cutover until bucket configuration, object
 inventory, version history, and checksums have been validated.
+
+
+## Acceptance Criteria
+
+- [ ] All in-scope source buckets are inventoried.
+- [ ] Required target buckets and versioning settings are verified.
+- [ ] Initial backfill and ongoing replication complete successfully.
+- [ ] Object counts, versions and SHA-256 checksums are validated.
+- [ ] Replication errors and pending objects are resolved.
+- [ ] Application read/write tests pass against the target.
+- [ ] Cutover approval and rollback decision criteria are documented.
+
+## Rollback Plan
+
+1. Keep source MinIO authoritative until cutover is formally approved.
+2. Record the cutover time and final replication status.
+3. If validation fails before cutover, stop the migration procedure and
+   investigate without deleting source data.
+4. If cutover fails, route application traffic back to the source only
+   after assessing writes made to the target.
+5. Reconcile any target-side writes before resuming service to avoid
+   data loss or conflicting versions.
+6. Preserve logs, checksums and migration evidence for review.
+
+## Production Readiness
+
+This lab does not prove production readiness. Production cutover requires
+approved downtime or write-freeze handling, access-control validation,
+capacity planning, monitoring, backup verification and a tested rollback.
