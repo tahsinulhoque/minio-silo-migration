@@ -214,3 +214,13 @@ inventory, version history, and checksums have been validated.
 This lab does not prove production readiness. Production cutover requires
 approved downtime or write-freeze handling, access-control validation,
 capacity planning, monitoring, backup verification and a tested rollback.
+
+### Migration-Test Bucket Validation
+
+- Source and Silo both contain `migration-test.txt` (43 B)
+  and `test-object-01.txt` (24 B).
+- `mc diff local/migration-test silo/migration-test` reported no differences.
+- SHA-256 verification matched for `migration-test.txt`.
+- Initial object-list parity: PASS.
+- Full version-history parity and checksum verification of every object
+  remain pending.
