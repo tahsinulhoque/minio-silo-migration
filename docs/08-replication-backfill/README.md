@@ -34,5 +34,6 @@ readiness.
 - Object size: 102 bytes on both sides.
 - Source SHA-256: `134ca695b885c0ed8d3a9b58c03448a5641dc0512d295bd2de851f3a877d2d33`
 - Target SHA-256: `134ca695b885c0ed8d3a9b58c03448a5641dc0512d295bd2de851f3a877d2d33`
-- Result: **PASS** — source and target object content hashes match.
+- Result: **PASS**  [source and target object content hashes match.] 
 - Limitation: This verifies the content of this object only. It does not prove all versions, metadata, or the full bucket inventory are identical.
+
