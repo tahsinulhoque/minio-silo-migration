@@ -1,0 +1,15 @@
+services:
+  proxy:
+    image: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+    container_name: migration-proxy
+    ports:
+      - "127.0.0.1:9300:80"
+    volumes:
+      - ./nginx/proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - migration-net
+    restart: unless-stopped
+
+networks:
+  migration-net:
+    external: true
