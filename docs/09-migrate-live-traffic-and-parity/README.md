@@ -320,3 +320,20 @@ This is sample-based verification and does not represent a full-dataset checksum
 - The deliberate mismatch was repaired through manual object copy; automatic resync did not restore the missing object.
 - The measured upload-to-target-visibility latency is not an isolated replication lag metric.
 
+## Full Dataset SHA256 Checksum Verification
+
+A full current-object checksum comparison was performed between the source MinIO and target Silo using the MinIO Python SDK.
+
+| Metric | Result |
+|---|---:|
+| Source objects | 266 |
+| Silo objects | 266 |
+| Missing objects on Silo | 0 |
+| Extra objects on Silo | 0 |
+| Checksum mismatches | 0 |
+
+**Result: PASS**
+
+All 266 current objects were present on both sides, with no missing objects, extra objects, or SHA256 checksum mismatches.
+
+Note: This verification covers current objects, not every historical object version or delete marker.
