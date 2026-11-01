@@ -337,3 +337,20 @@ A full current-object checksum comparison was performed between the source MinIO
 All 266 current objects were present on both sides, with no missing objects, extra objects, or SHA256 checksum mismatches.
 
 Note: This verification covers current objects, not every historical object version or delete marker.
+
+
+### Accurate Replication Visibility Measurement
+
+A defined workload of 10 PUT requests was executed through the Nginx proxy while replication was active. Each object was checked individually on Silo after its source upload completed.
+
+| Metric | Result |
+|---|---:|
+| Total writes | 10 |
+| Replicated objects | 10 |
+| Missing objects | 0 |
+| Average visibility latency | 151.89 ms |
+| P95 visibility latency | 227.86 ms |
+
+**Result:** All 10 objects became visible on Silo.
+
+Note: These measurements represent upload-completion-to-target-visibility latency, not isolated replication processing latency. The convergence time after the final write was not independently measured and remains pending.
