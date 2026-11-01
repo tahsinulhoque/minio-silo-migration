@@ -257,3 +257,66 @@ A deliberate object mismatch was detected using `mc diff` and repaired through m
 However, full manifest parity, accurate replication lag measurement, retention/legal hold validation, SDK verification and automatic resync repair remain outstanding.
 
 **DEV-925 should not be marked fully complete until the remaining acceptance criteria have been addressed.**
+
+## 10. Additional Replication Lag Measurement
+
+A 10-object workload was uploaded through the migration proxy. Each object was checked on Silo immediately after its source upload.
+
+| Metric | Result |
+|---|---:|
+| Total writes | 10 |
+| Replicated objects | 10 |
+| Missing objects | 0 |
+| Average observed latency | 324.45 ms |
+| P95 observed latency | 397.19 ms |
+| Maximum observed latency | 397.19 ms |
+
+Note: These values represent upload-to-target-visibility latency, not isolated replication processing latency.
+
+## 11. Current Object Manifest Comparison
+
+Recursive JSON listings were collected from both source MinIO and Silo using `mc ls --recursive --json`.
+
+Compared fields:
+- Object keys
+- Object sizes
+- ETags
+
+The displayed source and target entries matched, including:
+- `live-traffic-93.txt` through `live-traffic-99.txt`
+- `mixed/new-write.txt`
+- `mixed/multipart-70mb.bin`
+- `version-test.txt`
+
+The 70 MiB object had matching size and ETag on both sides.
+
+Result: No differences were observed in the displayed current-object manifest entries.
+
+Note: This is not a complete version-history manifest or a full-dataset checksum verification.
+
+## 12. Random SDK Read and SHA256 Verification
+
+The MinIO Python SDK was used to read selected objects independently from the source MinIO and Silo endpoints.
+
+SHA256 checksums were calculated locally for each downloaded object.
+
+| Object | Source and Silo SHA256 |
+|---|---|
+| `live-traffic-99.txt` | MATCH |
+| `mixed/new-write.txt` | MATCH |
+| `mixed/multipart-70mb.bin` | MATCH |
+
+All three selected objects returned identical SHA256 checksums.
+
+Result: 3 of 3 selected SDK reads passed checksum comparison.
+
+This is sample-based verification and does not represent a full-dataset checksum audit.
+
+## 13. Remaining Limitations
+
+- Full-dataset checksum verification remains pending.
+- Full version-history manifest comparison remains pending.
+- Retention and Legal Hold could not be validated because Object Lock is not enabled/supported on the tested buckets.
+- The deliberate mismatch was repaired through manual object copy; automatic resync did not restore the missing object.
+- The measured upload-to-target-visibility latency is not an isolated replication lag metric.
+
