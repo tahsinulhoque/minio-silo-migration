@@ -354,3 +354,41 @@ A defined workload of 10 PUT requests was executed through the Nginx proxy while
 **Result:** All 10 objects became visible on Silo.
 
 Note: These measurements represent upload-completion-to-target-visibility latency, not isolated replication processing latency. The convergence time after the final write was not independently measured and remains pending.
+
+
+## 14. Post-Load Visibility and Convergence Check
+
+A post-load visibility check was performed against the 10 objects created during the accurate replication visibility measurement.
+
+The check used the following object naming pattern:
+
+`accurate-lag-1.txt` through `accurate-lag-10.txt`
+
+| Metric | Result |
+|---|---:|
+| Total objects checked | 10 |
+| Objects visible on Silo | 10 |
+| Missing objects | 0 |
+| Check duration | 2,355.83 ms |
+| Result | ALL VISIBLE |
+
+All 10 previously uploaded objects were found on Silo.
+
+**Important limitation:** The measured 2,355.83 ms is the duration of the post-load visibility check. It is not the actual time to convergence after the final source write, because the final write timestamp was not retained for this check.
+
+Therefore, the exact load-stop-to-convergence time remains unverified.
+
+## 15. Updated Replication Visibility Metrics
+
+The latest 10-write measurement produced the following results:
+
+| Metric | Result |
+|---|---:|
+| Total writes | 10 |
+| Replicated objects | 10 |
+| Average upload-to-visibility latency | 151.89 ms |
+| P95 upload-to-visibility latency | 227.86 ms |
+| Missing objects | 0 |
+
+These values represent upload-completion-to-target-visibility latency, not isolated replication processing latency.
+
