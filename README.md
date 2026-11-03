@@ -568,9 +568,10 @@ The completed verification work provides evidence of current-object consistency 
 
 The final migration outcome will depend on successful write cutover, rollback, final Silo operation without the source MinIO service, and the corresponding verification evidence.
 
-## 19. Repository
+## 19. Auhor 
+Md.Tahsinul Hoque Siddiki
 
+## 20.Repository
 GitHub:
-
 https://github.com/tahsinulhoque/minio-silo-migration
 
